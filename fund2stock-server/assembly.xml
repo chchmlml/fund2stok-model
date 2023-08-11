@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly>
+    <id>bin</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <files>
+        <file>
+            <source>src/main/bin/force_stop_server.sh</source>
+            <outputDirectory>/bin</outputDirectory>
+            <fileMode>777</fileMode>
+            <lineEnding>unix</lineEnding>
+        </file>
+        <file>
+            <source>src/main/bin/start_server.sh</source>
+            <outputDirectory>/bin</outputDirectory>
+            <fileMode>777</fileMode>
+            <lineEnding>unix</lineEnding>
+        </file>
+        <file>
+            <source>src/main/bin/stop_server.sh</source>
+            <outputDirectory>/bin</outputDirectory>
+            <fileMode>777</fileMode>
+            <lineEnding>unix</lineEnding>
+        </file>
+        <file>
+            <source>src/main/bin/common.sh</source>
+            <outputDirectory>/bin</outputDirectory>
+            <fileMode>777</fileMode>
+            <lineEnding>unix</lineEnding>
+        </file>
+        <file>
+            <source>target/fund2stock-server.jar</source>
+            <outputDirectory>/</outputDirectory>
+            <fileMode>775</fileMode>
+        </file>
+    </files>
+</assembly>
