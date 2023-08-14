@@ -91,6 +91,22 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>cn.wanghaomiao</groupId>
+                <artifactId>maven-seimicrawler-plugin</artifactId>
+                <version>1.3.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputDirectory>./logs</outputDirectory>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
