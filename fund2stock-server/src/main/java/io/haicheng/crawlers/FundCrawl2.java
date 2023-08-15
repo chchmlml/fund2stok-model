@@ -2,6 +2,7 @@ package io.haicheng.crawlers;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
@@ -25,6 +26,7 @@ import org.seimicrawler.xpath.JXDocument;
 import org.seimicrawler.xpath.JXNode;
 
 import java.lang.reflect.Type;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +43,8 @@ public class FundCrawl2 extends BaseSeimiCrawler {
 
     private String urlTemplate = "https://fundf10.eastmoney.com/FundArchivesDatas.aspx?type=jjcc&code=260112&topline=10&year={}&month=&rt={}";
 
+    public static String path = "/Users/haicheng/code/java/fund2stok-model/logs/api-data.txt";
+
     @Override
     public String[] startUrls() {
         return new String[]{getUrl("2023")};
@@ -55,6 +59,8 @@ public class FundCrawl2 extends BaseSeimiCrawler {
         try {
 
             ApiData apiData = ApiData.parse(response.getContent());
+
+            FileUtil.del(path);
 
             apiData.getListYear().forEach(y -> {
                 push(Request.build(getUrl(String.valueOf(y)), FundCrawl2::getDetail));
@@ -100,10 +106,12 @@ public class FundCrawl2 extends BaseSeimiCrawler {
                 }).collect(Collectors.toList()));
 
                 apiSeasonData.add(data);
+                FileUtil.appendUtf8String(JSONUtil.toJsonStr(data) + "\r\n", path);
             });
 
 
             log.info("解析数据： {}", apiSeasonData);
+
 
         } catch (Exception e) {
             e.printStackTrace();

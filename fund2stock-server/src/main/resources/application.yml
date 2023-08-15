@@ -27,7 +27,7 @@ server:
       directory: ./logs
   shutdown: graceful
   servlet:
-    context-path: /fund2stock
+    context-path: /
 
 logging.file.path: ./logs
 logging.config: classpath:logback-spring.xml
