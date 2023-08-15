@@ -3,6 +3,7 @@ package io.haicheng.crawlers;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONObject;
@@ -11,6 +12,9 @@ import cn.wanghaomiao.seimi.annotation.Crawler;
 import cn.wanghaomiao.seimi.def.BaseSeimiCrawler;
 import cn.wanghaomiao.seimi.struct.Request;
 import cn.wanghaomiao.seimi.struct.Response;
+import io.haicheng.dto.ApiData;
+import io.haicheng.dto.ApiSeasonData;
+import io.haicheng.dto.ApiSeasonStockData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,7 +47,7 @@ public class FundCrawl2 extends BaseSeimiCrawler {
     }
 
     private String getUrl(String year) {
-        return StrUtil.format(urlTemplate, year, (new Date()).getTime());
+        return StrUtil.format(urlTemplate, year, (new Date()).getTime() + '.' + RandomUtil.randomInt(10000, 99999));
     }
 
     @Override
@@ -74,13 +78,13 @@ public class FundCrawl2 extends BaseSeimiCrawler {
             log.info("本年季度数据： {}", boxes.size());
             List<ApiSeasonData> apiSeasonData = CollUtil.newArrayList();
 
-            boxes.stream().forEach(b -> {
+            boxes.forEach(b -> {
                 JXNode timeEl = b.selOne("//div/h4/label[@class='right lab2 xq505']/font[@class='px12']/text()");
 
                 ApiSeasonData data = ApiSeasonData.builder().date(timeEl.asString()).build();
 
 
-                List<JXNode> trs = b.sel("//table/tbody/tr");
+                List<JXNode> trs = b.sel("//table/tbody/tr[*]");
 
                 data.setItems(trs.stream().map(t -> {
 
@@ -121,35 +125,4 @@ public class FundCrawl2 extends BaseSeimiCrawler {
         return ApiData.builder().curYear(curyear).listYear(listYear).content(content).build();
     }
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class ApiData {
-        String content;
-        List<Integer> listYear;
-        String curYear;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class ApiSeasonData {
-        String date;
-        List<ApiSeasonStockData> items;
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class ApiSeasonStockData {
-        String id;
-        String code;
-        String name;
-        String rate;
-        String hold;
-        String amount;
-    }
 }
