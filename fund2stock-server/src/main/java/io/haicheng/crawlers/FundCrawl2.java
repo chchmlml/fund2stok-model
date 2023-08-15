@@ -54,7 +54,7 @@ public class FundCrawl2 extends BaseSeimiCrawler {
     public void start(Response response) {
         try {
 
-            ApiData apiData = parseApiData(response.getContent());
+            ApiData apiData = ApiData.parse(response.getContent());
 
             apiData.getListYear().forEach(y -> {
                 push(Request.build(getUrl(String.valueOf(y)), FundCrawl2::getDetail));
@@ -70,7 +70,7 @@ public class FundCrawl2 extends BaseSeimiCrawler {
 
             log.info("开始解析地址： {}", response.getUrl());
 
-            ApiData apiData = parseApiData(response.getContent());
+            ApiData apiData = ApiData.parse(response.getContent());
             JXDocument document = JXDocument.create(apiData.getContent());
 
             List<JXNode> boxes = document.selN("//body/div[@class='box']");
@@ -108,21 +108,6 @@ public class FundCrawl2 extends BaseSeimiCrawler {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private ApiData parseApiData(String response) {
-        JSONObject data = JSONUtil.parseObj(StrUtil.removePrefixIgnoreCase(response, "var apidata="));
-
-        String content = data.getStr("content");
-        List<Integer> listYear = data.getJSONArray("arryear").toBean(new TypeReference<List<Integer>>() {
-            @Override
-            public Type getType() {
-                return super.getType();
-            }
-        });
-        String curyear = data.getStr("curyear");
-
-        return ApiData.builder().curYear(curyear).listYear(listYear).content(content).build();
     }
 
 }
